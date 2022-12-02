@@ -1,0 +1,9 @@
+@echo off
+
+python -m nuitka --windows-disable-console --follow-imports --windows-icon-from-ico=icon.ico "VirusV4.py"
+
+rmdir /s /q VirusV4.build
+del "VirusV4.cmd"
+
+:cmd
+pause null
