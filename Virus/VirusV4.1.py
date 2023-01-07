@@ -146,7 +146,7 @@ class Data:
 		with open(user_path + path_to_save, "w", encoding="utf-8") as cookies:
 			results = results.replace('True', 'true')
 			results = results.replace('False', 'false')
-			results = results.replace('""', '"')
+# 			results = results.replace('""', '"')
 			results = results[:-1] + '\n]'
 			cookies.write(results)
 
